@@ -19,7 +19,7 @@ public class SimpleLog {
 	 * Constructor of 'SimpleLog' class, which creates the log file
 	 * 
 	 * @param file
-	 *            The <code>File</code> where the Log should be saved to
+	 *            The File where the Log should be saved to
 	 * @param useSameFile
 	 *            If false, there will be a new file for every launch
 	 * @param useTimestamp
@@ -61,16 +61,16 @@ public class SimpleLog {
 	 * @return false, if an IOException has occurred
 	 */
 	public boolean log(String text) {
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
 		}
-		
+
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + " ");
@@ -93,9 +93,9 @@ public class SimpleLog {
 	 * @return false, if an IOException has occurred
 	 */
 	public boolean debug(String text) {
-		
+
 		text = "DEBUG: " + text;
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
@@ -104,7 +104,7 @@ public class SimpleLog {
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + " ");
@@ -127,9 +127,9 @@ public class SimpleLog {
 	 * @return false, if an IOException has occurred
 	 */
 	public boolean info(String text) {
-		
+
 		text = "INFO: " + text;
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
@@ -138,7 +138,7 @@ public class SimpleLog {
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + " ");
@@ -161,9 +161,9 @@ public class SimpleLog {
 	 * @return false, if an IOException has occurred
 	 */
 	public boolean warning(String text) {
-		
+
 		text = "WARNING: " + text;
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
@@ -172,7 +172,7 @@ public class SimpleLog {
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + " ");
@@ -196,25 +196,25 @@ public class SimpleLog {
 	 * @return false, if an IOException has occurred
 	 */
 	public boolean logStackTrace(Exception e) {
-		
+
 		if (dummy) {
 			e.printStackTrace();
 			return true;
 		}
-		
+
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
-		
+
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + "  ");
 			}
-			
+
 			String s = sw.toString();
 			out.append(s + "\n");
 			out.close();
@@ -236,16 +236,16 @@ public class SimpleLog {
 	public boolean error(String text) {
 
 		text = "ERROR: " + text;
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
 		}
-		
+
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + " ");
@@ -270,16 +270,16 @@ public class SimpleLog {
 	public boolean fatal(String text) {
 
 		text = "FATAL ERROR: " + text;
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
 		}
-		
+
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			if (timestamp) {
 				out.append((CharSequence) dateFormat.format(time) + " ");
 				System.out.print(dateFormat.format(time) + " ");
@@ -295,31 +295,32 @@ public class SimpleLog {
 	}
 
 	/**
-	 * Print a startup message to the file. The timestamp will be centered in the box
+	 * Print a startup message to the file. The timestamp will be centered in
+	 * the box
 	 * 
 	 * @param text
 	 *            The startup message
 	 * @return success
 	 */
 	public boolean startupMessage(String text) {
-		
+
 		if (dummy) {
 			System.out.println(text);
 			return true;
 		}
-		
+
 		try {
 			Timestamp time = new Timestamp(System.currentTimeMillis());
 			FileWriter out = new FileWriter(file, true);
-			
+
 			for (int i = 0; i < text.length(); i++) {
 				out.append("=");
 				System.out.print("=");
 			}
-			
+
 			out.append("\n" + text + "\n");
 			System.out.println("\n" + text);
-			
+
 			if (timestamp) {
 				String text2 = "";
 
@@ -330,12 +331,12 @@ public class SimpleLog {
 				out.append(text2 + "\n");
 				System.out.println(text2);
 			}
-			
+
 			for (int i = 0; i < text.length(); i++) {
 				out.append("=");
 				System.out.print("=");
 			}
-			
+
 			out.append("\n");
 			System.out.println("\n");
 			out.close();
