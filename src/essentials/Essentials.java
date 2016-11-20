@@ -33,28 +33,28 @@ import java.util.regex.Pattern;
 public class Essentials {
 
 	/**
-	 * Adds a Component to a Container using the {@link GridBagLayout}.
+	 * Adds a component to a container using the {@link GridBagLayout}.
 	 * 
 	 * @param container
-	 *            Container to which the Component will be added
+	 *            Container to which the component will be added
 	 * @param layout
 	 *            Used GridBagLayout object
 	 * @param component
-	 *            Component which will be added to the Container
+	 *            Component which will be added to the container
 	 * @param x
-	 *            x coordinate of the Component in the grid
+	 *            x coordinate of the component in the grid
 	 * @param y
-	 *            y coordinate of the Component in the grid
+	 *            y coordinate of the component in the grid
 	 * @param width
-	 *            width of the Component
+	 *            Width of the component
 	 * @param height
-	 *            height of the Component
+	 *            Height of the component
 	 * @param weightx
-	 *            x weight of the Component
+	 *            x weight of the component
 	 * @param weighty
 	 *            y weight of the component
 	 * @param insets
-	 *            Insets which defines the distances around the Component
+	 *            Insets which defines the distances around the component
 	 * @return boolean false if exception occurred
 	 */
 	public static boolean addComponent(Container container, GridBagLayout layout, Component component, int x, int y,
@@ -79,6 +79,179 @@ public class Essentials {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Copies a BufferedImage
+	 * 
+	 * @param image
+	 *            The image that should be copied
+	 * @return The copied image
+	 */
+	public static BufferedImage copyBufferedImage(BufferedImage image) {
+
+		ColorModel cm = image.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		WritableRaster raster = image.copyData(null);
+		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
+
+	/**
+	 * Counts the number of lines in the given File. Empty lines will be skipped
+	 * 
+	 * @param file
+	 *            The File to count the lines of
+	 * @return amount of lines
+	 * @throws IOException
+	 *             if file is not found or can't be read
+	 */
+	public static int countFileLines(File file) throws IOException {
+
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String s = br.readLine();
+		int i = 0;
+
+		while (s != null) {
+			if (!s.trim().equals(""))
+				i++;
+			s = br.readLine();
+		}
+
+		br.close();
+		return i;
+
+		// TODO Not working properly! (Check for bugs)
+		//
+		// InputStream is = new BufferedInputStream(new FileInputStream(file));
+		//
+		// try {
+		// byte[] c = new byte[1024];
+		// int count = 0;
+		// int readChars = 0;
+		// boolean empty = true;
+		//
+		// while ((readChars = is.read(c)) != -1) {
+		// empty = false;
+		//
+		// for (int i = 0; i < readChars; ++i) {
+		//
+		// if (c[i] == '\n')
+		// ++count;
+		// }
+		// }
+		//
+		// return (count == 0 && !empty) ? 1 : count;
+		// } finally {
+		// is.close();
+		// }
+	}
+
+	/**
+	 * Downloads a File from an URL and saves it to the computer
+	 * 
+	 * @param url
+	 *            The URL of the File
+	 * @param saveFile
+	 *            The path where the File should be saved
+	 * @return success
+	 * @throws IOException
+	 *             if HTTP error code is returned
+	 * @throws FileNotFoundException
+	 *             if file has not be found
+	 */
+	public static boolean downloadFileFromURL(URL url, File saveFile) throws IOException, FileNotFoundException {
+
+		HttpURLConnection c = (HttpURLConnection) url.openConnection();
+		c.connect();
+
+		BufferedInputStream in = new BufferedInputStream(c.getInputStream());
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(saveFile));
+		byte[] b = new byte[256];
+		int n = 0;
+
+		while ((n = in.read(b)) >= 0) {
+			out.write(b, 0, n);
+		}
+
+		out.flush();
+		out.close();
+		return true;
+	}
+
+	/**
+	 * Assembles a String[] to one String, in which the parts are separated by
+	 * blanks
+	 * 
+	 * @param array
+	 *            The String array that will be assembled
+	 * @return The assembled String
+	 */
+	public static String getAssembledStringArray(String[] array) {
+
+		String string = "";
+
+		for (String part : array) {
+			string = string + part + " ";
+		}
+
+		return string.substring(0, string.length() - 1);
+	}
+
+	/**
+	 * Returns the IP address of the network interface currently in use
+	 * 
+	 * @return MAC address
+	 */
+	public static String getIp() {
+
+		try {
+			InetAddress ip = InetAddress.getLocalHost();
+			return ip.getHostAddress();
+		} catch (UnknownHostException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the MAC address of the network interface currently in use
+	 * 
+	 * @return MAC address
+	 */
+	public static String getMac() {
+
+		try {
+			InetAddress ip = InetAddress.getLocalHost();
+			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+			byte[] mac = network.getHardwareAddress();
+			StringBuilder sb = new StringBuilder();
+
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+
+			return sb.toString();
+		} catch (UnknownHostException | SocketException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Checks if a String is included in a String[]
+	 * 
+	 * @param array
+	 *            String array
+	 * @param string
+	 *            String
+	 * @return true if included, false if not
+	 */
+	public static boolean isIncluded(String[] array, String string) {
+
+		for (String s : array) {
+			if (s.equals(string))
+				return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -204,126 +377,6 @@ public class Essentials {
 	}
 
 	/**
-	 * Counts the number of lines in the given File. Empty lines will be skipped
-	 * 
-	 * @param file
-	 *            The File to count the lines of
-	 * @return amount of lines
-	 * @throws IOException
-	 *             if file is not found or can't be read
-	 */
-	public static int countFileLines(File file) throws IOException {
-
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String s = br.readLine();
-		int i = 0;
-
-		while (s != null) {
-			if (!s.trim().equals(""))
-				i++;
-			s = br.readLine();
-		}
-
-		br.close();
-		return i;
-
-		// TODO Not working properly! (Check for bugs)
-		//
-		// InputStream is = new BufferedInputStream(new FileInputStream(file));
-		//
-		// try {
-		// byte[] c = new byte[1024];
-		// int count = 0;
-		// int readChars = 0;
-		// boolean empty = true;
-		//
-		// while ((readChars = is.read(c)) != -1) {
-		// empty = false;
-		//
-		// for (int i = 0; i < readChars; ++i) {
-		//
-		// if (c[i] == '\n')
-		// ++count;
-		// }
-		// }
-		//
-		// return (count == 0 && !empty) ? 1 : count;
-		// } finally {
-		// is.close();
-		// }
-	}
-
-	/**
-	 * Send HTTP requests to a webserver and fetch the answer
-	 * 
-	 * @param url
-	 *            The URL you want to send a request to
-	 * @return The answer from that URL
-	 * @throws IOException
-	 *             if connection failed
-	 */
-	public static String sendHTTPRequest(URL url) throws IOException {
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-		String answer = "";
-		String line = "";
-
-		while (null != (line = br.readLine())) {
-			answer = answer + line + "\n";
-		}
-
-		br.close();
-		return answer;
-	}
-
-	/**
-	 * Downloads a File from an URL and saves it to the computer
-	 * 
-	 * @param url
-	 *            The URL of the File
-	 * @param saveFile
-	 *            The path where the File should be saved
-	 * @return success
-	 * @throws IOException
-	 *             if HTTP error code is returned
-	 * @throws FileNotFoundException
-	 *             if file has not be found
-	 */
-	public static boolean downloadFileFromURL(URL url, File saveFile) throws IOException, FileNotFoundException {
-
-		HttpURLConnection c = (HttpURLConnection) url.openConnection();
-		c.connect();
-
-		BufferedInputStream in = new BufferedInputStream(c.getInputStream());
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(saveFile));
-		byte[] b = new byte[256];
-		int n = 0;
-
-		while ((n = in.read(b)) >= 0) {
-			out.write(b, 0, n);
-		}
-
-		out.flush();
-		out.close();
-		return true;
-	}
-
-	/**
-	 * Copies a BufferedImage
-	 * 
-	 * @param image
-	 *            The image that should be copied
-	 * @return The copied image
-	 */
-	public static BufferedImage copyBufferedImage(BufferedImage image) {
-
-		ColorModel cm = image.getColorModel();
-		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-		WritableRaster raster = image.copyData(null);
-		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-	}
-
-	/**
 	 * Search for all IPs on the local network using the arp -a command. Works
 	 * only on Windows machines
 	 * 
@@ -377,78 +430,25 @@ public class Essentials {
 	}
 
 	/**
-	 * Assembles a String[] to one String, in which the parts are separated by
-	 * blanks
+	 * Send HTTP requests to a webserver and fetch the answer
 	 * 
-	 * @param array
-	 *            The String array that will be assembled
-	 * @return The assembled String
+	 * @param url
+	 *            The URL you want to send a request to
+	 * @return The answer from that URL
+	 * @throws IOException
+	 *             if connection failed
 	 */
-	public static String getAssembledStringArray(String[] array) {
+	public static String sendHTTPRequest(URL url) throws IOException {
 
-		String string = "";
+		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+		String answer = "";
+		String line = "";
 
-		for (String part : array) {
-			string = string + part + " ";
+		while (null != (line = br.readLine())) {
+			answer = answer + line + "\n";
 		}
 
-		return string.substring(0, string.length() - 1);
-	}
-
-	/**
-	 * Checks if a String is included in a String[]
-	 * 
-	 * @param array
-	 *            String array
-	 * @param string
-	 *            String
-	 * @return true if included, false if not
-	 */
-	public static boolean isIncluded(String[] array, String string) {
-
-		for (String s : array) {
-			if (s.equals(string))
-				return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Returns the MAC address of the network interface currently in use
-	 * 
-	 * @return MAC address
-	 */
-	public static String getMac() {
-
-		try {
-			InetAddress ip = InetAddress.getLocalHost();
-			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-			byte[] mac = network.getHardwareAddress();
-			StringBuilder sb = new StringBuilder();
-
-			for (int i = 0; i < mac.length; i++) {
-				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-			}
-
-			return sb.toString();
-		} catch (UnknownHostException | SocketException e) {
-			return null;
-		}
-	}
-
-	/**
-	 * Returns the IP address of the network interface currently in use
-	 * 
-	 * @return MAC address
-	 */
-	public static String getIp() {
-
-		try {
-			InetAddress ip = InetAddress.getLocalHost();
-			return ip.getHostAddress();
-		} catch (UnknownHostException e) {
-			return null;
-		}
+		br.close();
+		return answer;
 	}
 }
