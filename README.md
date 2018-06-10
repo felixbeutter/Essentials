@@ -9,6 +9,7 @@ A collection of some quite useful methods that I personally use very often. This
 - **Network** Network concerning methods e.g. to find out current MAC or IP
 - **Security** Methods for en-/decrypting, hashing, etc.
 - **SimpleLog** A log that has various methods for logging into a file
+- **Translator** A Translator, that translate text with google translate
 
 ###ssl:
 - **SSLServer** A simple ssl encrypted server
