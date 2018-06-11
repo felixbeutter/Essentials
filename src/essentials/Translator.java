@@ -24,7 +24,7 @@ public class Translator {
 	 */
 	public Translator() {
 		this.langFrom = "en";
-		this.langTo = langTo;
+		this.langTo = "de";
 	}
 
 	/**
@@ -42,7 +42,6 @@ public class Translator {
 	 * @param langTo
 	 */
 	public Translator(String langFrom, String langTo) {
-		super();
 		this.langFrom = langFrom;
 		this.langTo = langTo;
 	}
