@@ -62,22 +62,14 @@ public class Essentials {
 	 * @throws IOException
 	 *             if an exception occurred
 	 */
-	public static void log(String string, File file, boolean printTimestamp) throws IOException {
+	public static void log(File file, String string, boolean printTimestamp) throws IOException {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-		if (!file.exists())
-			file.createNewFile();
-
-		FileWriter fileWriter = new FileWriter(file, true);
-
 		if (printTimestamp)
-			fileWriter.append((CharSequence) simpleDateFormat.format(timestamp) + " " + string + "\n");
+			FileUtils.writeToFile(file, (CharSequence) simpleDateFormat.format(timestamp) + " " + string + "\n");
 		else
-			fileWriter.append(string + "\n");
-
-		fileWriter.close();
-		System.out.println(simpleDateFormat.format(timestamp) + " " + string);
+			FileUtils.writeToFile(file, string + "\n");
 	}
 }

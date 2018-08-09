@@ -19,7 +19,7 @@ public class FileUtils {
 	 * @return The amount of lines
 	 * @throws IOException
 	 *             if file is not found or can't be read
-	 */S
+	 */
 	public static int countFileLines(File file, boolean skipEmptyLines) throws IOException {
 
 		BufferedReader reader = new BufferedReader(new FileReader(file));
