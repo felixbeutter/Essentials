@@ -1,6 +1,7 @@
 package essentials;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,87 +10,122 @@ import java.io.IOException;
 public class FileUtils {
 
 	/**
-	 * Counts the number of lines in the given File. Empty lines will be skipped
+	 * Counts the number of lines in the given File.
 	 * 
 	 * @param file
 	 *            The File to count the lines of
-	 * @return amount of lines
+	 * @param skipEmptyLines
+	 *            if true, empty lines will not be counted
+	 * @return The amount of lines
 	 * @throws IOException
 	 *             if file is not found or can't be read
-	 */
-	public static int countFileLines(File file) throws IOException {
+	 */S
+	public static int countFileLines(File file, boolean skipEmptyLines) throws IOException {
 
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String s = br.readLine();
-		int i = 0;
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 
-		while (s != null) {
-			if (!s.trim().equals(""))
-				i++;
-			s = br.readLine();
+		String line = reader.readLine();
+		int lines = 0;
+
+		if (skipEmptyLines) {
+
+			while (line != null) {
+
+				if (!line.trim().equals(""))
+					lines++;
+				line = reader.readLine();
+			}
+
+		} else {
+
+			while (line != null) {
+
+				lines++;
+				line = reader.readLine();
+			}
 		}
 
-		br.close();
-		return i;
+		reader.close();
+		return lines;
 	}
 
 	/**
 	 * Writes a String to the end of a File.
 	 * 
-	 * @param text
-	 *            The String, that will be written to the File
 	 * @param file
-	 *            The File that should be written to
-	 * @return boolean false if exception occurred
+	 *            The File that will be written to
+	 * @param string
+	 *            The String
+	 * @throws IOException
+	 *             if something went wrong while writing to file
 	 */
-	public static boolean printStringToFile(String text, File file) {
+	public static void writeToFile(File file, String string) throws IOException {
 
-		try {
-			if (!file.exists())
-				file.createNewFile();
+		if (!file.exists())
+			file.createNewFile();
 
-			FileWriter fileWriter = new FileWriter(file, true);
-			fileWriter.append(text);
-			fileWriter.close();
-			System.out.println("Wrote '" + text + "' into '" + file.getPath() + "'");
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		writer.append(string);
+		writer.close();
 	}
 
 	/**
-	 * Reads a given File and returns the text
+	 * Writes a char[] to the end of a File.
+	 * 
+	 * @param file
+	 *            The File that will be written to
+	 * @param characters
+	 *            The char array
+	 * @throws IOException
+	 *             if something went wrong while writing to file
+	 */
+	public static void writeToFile(File file, char[] characters) throws IOException {
+		writeToFile(file, new String(characters));
+	}
+
+	/**
+	 * Writes a byte[] to the end of a File.
+	 * 
+	 * @param file
+	 *            The File that will be written to
+	 * @param bytes
+	 *            The byte array
+	 * @throws IOException
+	 *             if something went wrong while writing to file
+	 */
+	public static void writeToFile(File file, byte[] bytes) throws IOException {
+		writeToFile(file, new String(bytes));
+	}
+
+	/**
+	 * Reads a File and returns the text as String. Lines are separated by blanks.
 	 * 
 	 * @param file
 	 *            The File to read
-	 * @return The content of the file
+	 * @return The content of the File as String
 	 * @throws IOException
 	 *             if file isn't found or can't be read
 	 */
-
 	public static String readFile(File file) throws IOException {
 
-		BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-		StringBuilder sb = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
+		StringBuilder builder = new StringBuilder();
 
-		try {
-			String line = br.readLine();
+		String line = reader.readLine();
 
-			while (line != null) {
-				sb.append(line);
-				sb.append("\n");
-				line = br.readLine();
-			}
-		} finally {
-			br.close();
+		while (line != null) {
+
+			builder.append(line + " ");
+			line = reader.readLine();
 		}
-		return sb.toString();
+		reader.close();
+
+		return builder.toString();
 	}
 
 	/**
-	 * Reads a given File and returns the text as String[]. Elements are
-	 * seperated by lines
+	 * Reads a given File and returns the text as String[]. Elements are seperated
+	 * by lines.
 	 * 
 	 * @param file
 	 *            The File to read
@@ -97,24 +133,22 @@ public class FileUtils {
 	 * @throws IOException
 	 *             if file isn't found or can't be read
 	 */
-
 	public static String[] readFileToArray(File file) throws IOException {
 
-		BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-		String[] array = new String[countFileLines(file)];
+		BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath()));
+		String[] array = new String[countFileLines(file, false)];
 
-		try {
-			String line = br.readLine();
-			int i = 0;
+		String line = reader.readLine();
+		int i = 0;
 
-			while (line != null) {
-				array[i] = line;
-				line = br.readLine();
-				i++;
-			}
-		} finally {
-			br.close();
+		while (line != null) {
+
+			array[i] = line;
+			line = reader.readLine();
+			i++;
 		}
+
+		reader.close();
 		return array;
 	}
 }

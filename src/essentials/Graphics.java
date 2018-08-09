@@ -36,32 +36,27 @@ public class Graphics {
 	 *            Insets which defines the distances around the component
 	 * @return boolean false if exception occurred
 	 */
-	public static boolean addComponent(Container container, GridBagLayout layout, Component component, int x, int y,
+	public static void addComponent(Container container, GridBagLayout layout, Component component, int x, int y,
 			int width, int height, double weightx, double weighty, Insets insets) {
 
 		if (insets == null)
 			insets = new Insets(0, 0, 0, 0);
 
-		try {
-			GridBagConstraints constraints = new GridBagConstraints();
-			constraints.fill = GridBagConstraints.BOTH;
-			constraints.gridx = x;
-			constraints.gridy = y;
-			constraints.gridwidth = width;
-			constraints.gridheight = height;
-			constraints.weightx = weightx;
-			constraints.weighty = weighty;
-			constraints.insets = insets;
-			layout.setConstraints(component, constraints);
-			container.add(component);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.gridx = x;
+		constraints.gridy = y;
+		constraints.gridwidth = width;
+		constraints.gridheight = height;
+		constraints.weightx = weightx;
+		constraints.weighty = weighty;
+		constraints.insets = insets;
+		layout.setConstraints(component, constraints);
+		container.add(component);
 	}
 
 	/**
-	 * Copies a BufferedImage
+	 * Copies a BufferedImage.
 	 * 
 	 * @param image
 	 *            The image that should be copied
@@ -69,9 +64,9 @@ public class Graphics {
 	 */
 	public static BufferedImage copyBufferedImage(BufferedImage image) {
 
-		ColorModel cm = image.getColorModel();
-		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		ColorModel model = image.getColorModel();
 		WritableRaster raster = image.copyData(null);
-		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+
+		return new BufferedImage(model, raster, model.isAlphaPremultiplied(), null);
 	}
 }
