@@ -1,7 +1,6 @@
 package essentials;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -64,7 +63,7 @@ public class Essentials {
 	 */
 	public static void log(File file, String string, boolean printTimestamp) throws IOException {
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss");
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
 		if (printTimestamp)

@@ -18,24 +18,17 @@ public class SimpleLog {
 	/**
 	 * Constructor of 'SimpleLog' class, which creates the log file.
 	 * 
-	 * @param path
-	 *            The path of the file where the log will be saved to
-	 * @param useSameFile
-	 *            If false, there will be a new file for every launch
+	 * @param file
+	 *            The File where the log will be saved to
 	 * @param useTimestamp
 	 *            If true, there will be a timestamp in front of every entry
 	 * @throws IOException
 	 *             if file does not exists and can not be created
 	 */
-	public SimpleLog(String path, boolean useSameFile, boolean useTimestamp) throws IOException {
+	public SimpleLog(File file, boolean useTimestamp) throws IOException {
 
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		this.file = file;
 		this.useTimestamp = useTimestamp;
-
-		if (!useSameFile)
-			this.file = new File(path + "_" + DATE_FORMAT.format(timestamp) + ".txt");
-		else
-			this.file = new File(path);
 
 		if (!file.exists())
 			file.createNewFile();
@@ -173,13 +166,13 @@ public class SimpleLog {
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			string = (CharSequence) DATE_FORMAT.format(timestamp) + " " + string;
 		}
-
+		
 		String line = "";
-		for (int i = 0; i < string.length(); i++)
+		for (int i = 0; i < string.length(); i++) 
 			line = line + "=";
-
+		
 		string = line + "\n" + string + "\n" + line;
-
+		
 		if (!dummy)
 			FileUtils.writeToFile(file, string + "\n");
 
