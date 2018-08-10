@@ -1,4 +1,4 @@
-package essentials;
+package language;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,7 +9,7 @@ import java.net.URLEncoder;
 import json.JSONArray;
 
 /**
- * @author Johannes Groß
+ * @author Johannes Groï¿½
  *
  */
 public class Translator {
