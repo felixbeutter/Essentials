@@ -6,27 +6,40 @@ import java.security.NoSuchAlgorithmException;
 public class Security {
 
 	/**
-	 * Returns the SHA-256 hash of a given string
+	 * Returns the hash of a given String.
 	 * 
 	 * @param string
-	 *            the String to be hashed
-	 * @return the hash of the String
+	 *            The String
+	 * @param hashAlgorithm
+	 *            This hash algorithm will be used
+	 * @return The hashed String
+	 * @throws NoSuchAlgorithmException
+	 *             if the given hash algorithm does not exist or is not available
 	 */
-	public static String hash(String string) {
+	public static String hash(String string, String hashAlgorithm) throws NoSuchAlgorithmException {
 
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			md.update(string.getBytes());
-			byte[] b = md.digest();
-			StringBuffer sb = new StringBuffer();
+		MessageDigest messageDigest = MessageDigest.getInstance(hashAlgorithm);
+		messageDigest.update(string.getBytes());
+		byte[] bytes = messageDigest.digest();
+		StringBuffer builder = new StringBuffer();
 
-			for (int i = 0; i < b.length; i++) {
-				sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
-			}
-
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			return null;
+		for (int i = 0; i < bytes.length; i++) {
+			builder.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
 		}
+
+		return builder.toString();
+	}
+
+	/**
+	 * Returns the hash of a given String using the SHA-256 hash algorithm.
+	 * 
+	 * @param string
+	 *            The String
+	 * @return The hashed String
+	 * @throws NoSuchAlgorithmException
+	 *             if the SHA-256 hash algorithm is not available
+	 */
+	public static String hash(String string) throws NoSuchAlgorithmException {
+		return hash(string, "SHA-256");
 	}
 }

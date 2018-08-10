@@ -64,7 +64,7 @@ public class FileUtils {
 		if (!file.exists())
 			file.createNewFile();
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 		writer.append(string);
 		writer.close();
 	}

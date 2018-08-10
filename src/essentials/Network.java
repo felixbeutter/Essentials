@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,78 +20,79 @@ import java.util.regex.Pattern;
 public class Network {
 
 	/**
-	 * Downloads a File from an URL and saves it to the computer
+	 * Downloads a File from an URL and saves it.
 	 * 
 	 * @param url
 	 *            The URL of the File
-	 * @param saveFile
-	 *            The path where the File should be saved
-	 * @return success
+	 * @param file
+	 *            The File
 	 * @throws IOException
-	 *             if HTTP error code is returned
-	 * @throws FileNotFoundException
-	 *             if file has not be found
+	 *             if something went wrong
 	 */
-	public static boolean downloadFileFromURL(URL url, File saveFile) throws IOException, FileNotFoundException {
+	public static void downloadFileFromURL(URL url, File file) throws IOException {
 
-		HttpURLConnection c = (HttpURLConnection) url.openConnection();
-		c.connect();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.connect();
 
-		BufferedInputStream in = new BufferedInputStream(c.getInputStream());
-		OutputStream out = new BufferedOutputStream(new FileOutputStream(saveFile));
-		byte[] b = new byte[256];
-		int n = 0;
+		if (!file.exists())
+			file.createNewFile();
 
-		while ((n = in.read(b)) >= 0) {
-			out.write(b, 0, n);
-		}
+		BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
+		OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+		byte[] bytes = new byte[256];
+		int i = 0;
 
-		out.flush();
-		out.close();
-		return true;
+		while ((i = inputStream.read(bytes)) >= 0)
+			outputStream.write(bytes, 0, i);
+
+		outputStream.flush();
+		outputStream.close();
 	}
 
 	/**
-	 * Returns the IP address of the network interface currently in use
+	 * Returns the IP address of the network interface currently in use.
 	 * 
-	 * @return MAC address
+	 * @return IP address
 	 */
-	public static String getIp() {
+	public static String getIP() {
 
 		try {
+
 			InetAddress ip = InetAddress.getLocalHost();
 			return ip.getHostAddress();
+
 		} catch (UnknownHostException e) {
 			return null;
 		}
 	}
 
 	/**
-	 * Returns the MAC address of the network interface currently in use
+	 * Returns the MAC address of the network interface currently in use.
 	 * 
 	 * @return MAC address
 	 */
-	public static String getMac() {
+	public static String getMAC() {
 
 		try {
+
 			InetAddress ip = InetAddress.getLocalHost();
 			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 			byte[] mac = network.getHardwareAddress();
-			StringBuilder sb = new StringBuilder();
+			StringBuilder builder = new StringBuilder();
 
 			for (int i = 0; i < mac.length; i++) {
-				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+				builder.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
 			}
 
-			return sb.toString();
+			return builder.toString();
 		} catch (UnknownHostException | SocketException e) {
 			return null;
 		}
 	}
 
 	/**
-	 * Search for all IPs on the local network using the arp -a command. Works
-	 * only on Windows machines
+	 * Returns all IPs on the local network using the arp -a command. Works only on
+	 * Windows machines.
 	 * 
 	 * @param includeLocalhost
 	 *            If true, the first entry will be 'localhost'
@@ -100,10 +100,11 @@ public class Network {
 	 * @throws IOException
 	 *             if command can not be executed
 	 */
-	public static String[] searchIPs(boolean includeLocalhost) throws IOException {
+	public static String[] getIPs(boolean includeLocalhost) throws IOException {
 
 		if (includeLocalhost) {
-			String[] ips = searchIPs(false);
+
+			String[] ips = getIPs(false);
 			String[] ips2 = new String[ips.length + 1];
 			ips2[0] = "localhost";
 
@@ -144,7 +145,7 @@ public class Network {
 	}
 
 	/**
-	 * Send HTTP requests to a webserver and fetch the answer
+	 * Send HTTP requests to a webserver and fetch the answer.
 	 * 
 	 * @param url
 	 *            The URL you want to send a request to
@@ -154,15 +155,15 @@ public class Network {
 	 */
 	public static String sendHTTPRequest(URL url) throws IOException {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 		String answer = "";
 		String line = "";
 
-		while (null != (line = br.readLine())) {
+		while (null != (line = reader.readLine())) {
 			answer = answer + line + "\n";
 		}
 
-		br.close();
+		reader.close();
 		return answer;
 	}
 }

@@ -10,10 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AES {
 
-	private static final String HASH_ALGORITHM = "SHA-256";
-	private static final String ALGORITHM = "AES";
-	private static final String TRANSFORMATION = "AES";
-
 	/**
 	 * Encrypts a string with a key using AES. If you set hashAlgorithm to null make
 	 * sure the key is 16 characters long.
@@ -35,20 +31,21 @@ public class AES {
 
 		if (hashAlgorithm != null) {
 
-			MessageDigest sha = MessageDigest.getInstance(hashAlgorithm);
-			bytes = sha.digest(key.getBytes());
+			MessageDigest messageDigest = MessageDigest.getInstance(hashAlgorithm);
+			bytes = messageDigest.digest(key.getBytes());
 			bytes = Arrays.copyOf(bytes, 16);
 		}
 
-		Key secret = new SecretKeySpec(bytes, ALGORITHM);
-		Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+		Key secret = new SecretKeySpec(bytes, "AES");
+		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.ENCRYPT_MODE, secret);
 
 		return Base64.getEncoder().encodeToString(cipher.doFinal(string.getBytes()));
 	}
 
 	/**
-	 * Encrypts a string with a key using AES.
+	 * Encrypts a string with a key using AES. The key will be hashed with SHA-256
+	 * beforehand.
 	 * 
 	 * @param key
 	 *            This String will be used for encryption
@@ -59,7 +56,7 @@ public class AES {
 	 *             if something went wrong while encrypting
 	 */
 	public static String encrypt(String key, String string) throws Exception {
-		return encrypt(key, string, HASH_ALGORITHM);
+		return encrypt(key, string, "SHA-256");
 	}
 
 	/**
@@ -79,19 +76,20 @@ public class AES {
 	 */
 	public static String decrypt(String key, String string, String hashAlgorithm) throws Exception {
 
-		MessageDigest sha = MessageDigest.getInstance(HASH_ALGORITHM);
-		byte[] bytes = sha.digest(key.getBytes());
+		MessageDigest messageDigest = MessageDigest.getInstance(hashAlgorithm);
+		byte[] bytes = messageDigest.digest(key.getBytes());
 		bytes = Arrays.copyOf(bytes, 16);
 
-		Key secret = new SecretKeySpec(bytes, ALGORITHM);
-		Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+		Key secret = new SecretKeySpec(bytes, "AES");
+		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, secret);
 
 		return new String(cipher.doFinal(Base64.getDecoder().decode(string)));
 	}
 
 	/**
-	 * Decrypts an encrypted string with a key using AES.
+	 * Decrypts an encrypted string with a key using AES. The key will be hashed
+	 * with SHA-256 beforehand.
 	 * 
 	 * @param key
 	 *            This String will be used for decryption
@@ -102,6 +100,6 @@ public class AES {
 	 *             if something went wrong while decrypting
 	 */
 	public static String decrypt(String key, String string) throws Exception {
-		return decrypt(key, string, HASH_ALGORITHM);
+		return decrypt(key, string, "SHA-256");
 	}
 }

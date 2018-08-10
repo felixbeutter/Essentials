@@ -34,7 +34,6 @@ public class Graphics {
 	 *            y weight of the component
 	 * @param insets
 	 *            Insets which defines the distances around the component
-	 * @return boolean false if exception occurred
 	 */
 	public static void addComponent(Container container, GridBagLayout layout, Component component, int x, int y,
 			int width, int height, double weightx, double weighty, Insets insets) {
