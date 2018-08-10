@@ -46,10 +46,9 @@ public class SimpleLog {
 	 *
 	 * @param string
 	 *            This String will be written to the log file
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void log(String string) throws IOException {
+	public boolean log(String string) {
 
 		if (useTimestamp) {
 
@@ -57,10 +56,16 @@ public class SimpleLog {
 			string = (CharSequence) DATE_FORMAT.format(timestamp) + " " + string;
 		}
 
-		if (!dummy)
-			FileUtils.writeToFile(file, string + "\n");
-
 		System.out.println(string);
+
+		if (!dummy)
+			try {
+				FileUtils.writeToFile(file, string + "\n");
+			} catch (IOException e) {
+				return false;
+			}
+
+		return true;
 	}
 
 	/**
@@ -68,11 +73,10 @@ public class SimpleLog {
 	 * 
 	 * @param string
 	 *            This String will be written to the log file
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void debug(String string) throws IOException {
-		log("DEBUG: " + string);
+	public boolean debug(String string) {
+		return log("DEBUG: " + string);
 	}
 
 	/**
@@ -80,11 +84,10 @@ public class SimpleLog {
 	 * 
 	 * @param string
 	 *            This String will be written to the log file
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void info(String string) throws IOException {
-		log("INFO: " + string);
+	public boolean info(String string) {
+		return log("INFO: " + string);
 	}
 
 	/**
@@ -92,11 +95,10 @@ public class SimpleLog {
 	 * 
 	 * @param string
 	 *            This String will be written to the log file
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void warning(String string) throws IOException {
-		log("WARNING: " + string);
+	public boolean warning(String string) {
+		return log("WARNING: " + string);
 	}
 
 	/**
@@ -104,11 +106,10 @@ public class SimpleLog {
 	 * 
 	 * @param string
 	 *            This String will be written to the log file
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void error(String string) throws IOException {
-		log("ERROR: " + string);
+	public boolean error(String string) {
+		return log("ERROR: " + string);
 	}
 
 	/**
@@ -116,11 +117,10 @@ public class SimpleLog {
 	 * 
 	 * @param string
 	 *            This String will be written to the log file
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void fatal(String string) throws IOException {
-		log("FATAL ERROR: " + string);
+	public boolean fatal(String string) {
+		return log("FATAL ERROR: " + string);
 	}
 
 	/**
@@ -128,10 +128,9 @@ public class SimpleLog {
 	 * 
 	 * @param exception
 	 *            The Exception, whose StackTrace should be logged
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void logStackTrace(Exception exception) throws IOException {
+	public boolean logStackTrace(Exception exception) {
 
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -145,10 +144,16 @@ public class SimpleLog {
 			string = (CharSequence) DATE_FORMAT.format(timestamp) + " " + string;
 		}
 
-		if (!dummy)
-			FileUtils.writeToFile(file, string + "\n");
-
 		exception.printStackTrace();
+
+		if (!dummy)
+			try {
+				FileUtils.writeToFile(file, string + "\n");
+			} catch (IOException e) {
+				return false;
+			}
+
+		return true;
 	}
 
 	/**
@@ -156,26 +161,30 @@ public class SimpleLog {
 	 * 
 	 * @param string
 	 *            The startup message
-	 * @throws IOException
-	 *             if could not write to file
+	 * @return false if could not write to file
 	 */
-	public void startUpMessage(String string) throws IOException {
+	public boolean startUpMessage(String string) {
 
 		if (useTimestamp) {
 
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			string = (CharSequence) DATE_FORMAT.format(timestamp) + " " + string;
 		}
-		
-		String line = "";
-		for (int i = 0; i < string.length(); i++) 
-			line = line + "=";
-		
-		string = line + "\n" + string + "\n" + line;
-		
-		if (!dummy)
-			FileUtils.writeToFile(file, string + "\n");
 
+		String line = "";
+		for (int i = 0; i < string.length(); i++)
+			line = line + "=";
+
+		string = line + "\n" + string + "\n" + line;
 		System.out.println(string);
+
+		if (!dummy)
+			try {
+				FileUtils.writeToFile(file, string + "\n");
+			} catch (IOException e) {
+				return false;
+			}
+
+		return true;
 	}
 }
