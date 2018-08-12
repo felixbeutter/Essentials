@@ -27,7 +27,7 @@ public class SSLClient {
 	int port = 443, id = 0;
 
 	public SSLClient() {
-
+		log = new SimpleLog();
 		File configFile = new File(PATH + "config.properties");
 		Properties config = new Properties();
 
@@ -77,5 +77,9 @@ public class SSLClient {
 			log.logStackTrace(e);
 			System.exit(1);
 		}
+	}
+	
+	public static void main(String[] args) {
+		new SSLClient();
 	}
 }
