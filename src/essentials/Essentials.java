@@ -71,4 +71,40 @@ public class Essentials {
 		else
 			FileUtils.writeToFile(file, string + "\n");
 	}
+	
+	/**
+	 *  Generates a String with random chars, ideal to generate passwords
+	 * 
+	 * @param length 
+	 * 				the length of the returning String
+	 * @param base
+	 * 				a string with all desired characters
+	 * 
+	 * @return String with random characters
+	 */
+	
+	public static String generateRandomString(int length, String base) {
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i< length; i++) {
+            int character = (int)(Math.random()*base.length());
+            builder.append(base.charAt(character));
+        }
+        return builder.toString();
+	}
+	
+	/**
+	 *  Generates a String with random chars, ideal to generate passwords
+	 * 
+	 * @param length 
+	 * 				the length of the returning String
+	 * @return String with random characters and given length from default base:
+	 *         [A-Z,a-z,+,-,*,/,!,",§,$,%,&,/,(,),=,?]
+	 */
+	
+	public static String generateRandomString(int length){
+		String defaultBase = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyu0123456789+-*/!\"§$%&/()=?";
+		return generateRandomString(length, defaultBase);
+	    
+    }
 }
