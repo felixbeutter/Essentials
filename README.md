@@ -2,7 +2,7 @@
 
 A collection of some quite useful methods that I personally use very often. This project includes following packages and classes:
 
-###essentials:
+### essentials:
 - **Essentials** A collection of some essential methods
 - **FileUtils** Methods to interact more comfortably with files
 - **Graphics** Some methods to handle with graphic
@@ -11,7 +11,7 @@ A collection of some quite useful methods that I personally use very often. This
 - **SimpleLog** A log that has various methods for logging into a file
 - **Translator** A Translator, that translate text with google translate
 
-###ssl:
+### ssl:
 - **SSLServer** A simple ssl encrypted server
 - **ClientThread** Handles the ssl server clients 
 - **SSLClient** A simple ssl client to connect to a ssl server
